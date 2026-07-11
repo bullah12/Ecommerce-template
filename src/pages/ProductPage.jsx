@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Button from '../components/Button';
 import HeartIcon from '../components/HeartIcon';
@@ -14,6 +14,18 @@ export default function ProductPage() {
   const { addItem } = useCart();
   const { isSaved, toggleItem } = useWishlist();
   const [quantity, setQuantity] = useState(1);
+
+  // Brief "Added" confirmation on the button after adding to cart
+  const [justAdded, setJustAdded] = useState(false);
+  const addedTimer = useRef(null);
+  useEffect(() => () => clearTimeout(addedTimer.current), []);
+
+  const handleAdd = () => {
+    addItem(product.id, quantity);
+    setJustAdded(true);
+    clearTimeout(addedTimer.current);
+    addedTimer.current = setTimeout(() => setJustAdded(false), 1500);
+  };
 
   if (!product) {
     return (
@@ -46,12 +58,16 @@ export default function ProductPage() {
           <p className="pdp__desc">{product.description}</p>
           <div className="pdp__actions">
             <QuantitySelector value={quantity} onChange={setQuantity} />
-            <Button
-              onClick={() => addItem(product.id, quantity)}
-              disabled={!product.inStock}
-            >
-              {product.inStock ? 'Add to cart' : 'Out of stock'}
+            <Button onClick={handleAdd} disabled={!product.inStock}>
+              {!product.inStock
+                ? 'Out of stock'
+                : justAdded
+                  ? 'Added ✓'
+                  : 'Add to cart'}
             </Button>
+            <span className="visually-hidden" role="status">
+              {justAdded ? `${product.name} added to cart` : ''}
+            </span>
             <Button
               variant="secondary"
               onClick={() => toggleItem(product.id)}

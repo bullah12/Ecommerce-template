@@ -73,7 +73,10 @@ export default function Header() {
           >
             <HeartIcon filled={wishlistCount > 0} />
             {wishlistCount > 0 && (
-              <span className="header__cart-count">{wishlistCount}</span>
+              // Keyed on the count so the pop animation replays on change
+              <span className="header__cart-count" key={wishlistCount}>
+                {wishlistCount}
+              </span>
             )}
           </Link>
           <Link to="/account" className="header__cart">
@@ -86,7 +89,11 @@ export default function Header() {
             aria-label={`Open cart, ${count} item${count === 1 ? '' : 's'}`}
           >
             Cart
-            {count > 0 && <span className="header__cart-count">{count}</span>}
+            {count > 0 && (
+              <span className="header__cart-count" key={count}>
+                {count}
+              </span>
+            )}
           </button>
         </div>
       </div>

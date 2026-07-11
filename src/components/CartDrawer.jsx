@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
@@ -21,6 +21,19 @@ export default function CartDrawer() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isOpen, closeCart]);
 
+  // Move focus into the dialog on open; return it on close
+  const closeButtonRef = useRef(null);
+  const lastFocusedRef = useRef(null);
+  useEffect(() => {
+    if (isOpen) {
+      lastFocusedRef.current = document.activeElement;
+      closeButtonRef.current?.focus();
+    } else if (lastFocusedRef.current) {
+      lastFocusedRef.current.focus?.();
+      lastFocusedRef.current = null;
+    }
+  }, [isOpen]);
+
   return (
     <>
       <div
@@ -30,13 +43,19 @@ export default function CartDrawer() {
       />
       <aside
         className={`cart-drawer${isOpen ? ' cart-drawer--open' : ''}`}
+        role="dialog"
+        aria-modal="true"
         aria-label="Shopping cart"
         aria-hidden={!isOpen}
+        // String form keeps React 18 rendering the bare `inert` attribute,
+        // so the closed drawer is untabbable as well as hidden
+        inert={isOpen ? undefined : ''}
       >
         <div className="cart-drawer__head">
           <h2 className="cart-drawer__title">Your cart</h2>
           <button
             type="button"
+            ref={closeButtonRef}
             className="cart-drawer__close"
             onClick={closeCart}
             aria-label="Close cart"
