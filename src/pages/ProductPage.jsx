@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Button from '../components/Button';
+import HeartIcon from '../components/HeartIcon';
 import PlaceholderImage from '../components/PlaceholderImage';
 import QuantitySelector from '../components/QuantitySelector';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import { formatPrice, getCollection, getProduct } from '../data/products';
 
 export default function ProductPage() {
   const { productId } = useParams();
   const product = getProduct(productId);
   const { addItem } = useCart();
+  const { isSaved, toggleItem } = useWishlist();
   const [quantity, setQuantity] = useState(1);
 
   if (!product) {
@@ -43,8 +46,19 @@ export default function ProductPage() {
           <p className="pdp__desc">{product.description}</p>
           <div className="pdp__actions">
             <QuantitySelector value={quantity} onChange={setQuantity} />
-            <Button onClick={() => addItem(product.id, quantity)}>
-              Add to cart
+            <Button
+              onClick={() => addItem(product.id, quantity)}
+              disabled={!product.inStock}
+            >
+              {product.inStock ? 'Add to cart' : 'Out of stock'}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => toggleItem(product.id)}
+              aria-pressed={isSaved(product.id)}
+            >
+              <HeartIcon filled={isSaved(product.id)} />
+              {isSaved(product.id) ? 'Saved' : 'Save'}
             </Button>
           </div>
           <p className="pdp__note">

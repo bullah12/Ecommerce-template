@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import Button from './Button';
@@ -6,6 +7,7 @@ import PlaceholderImage from './PlaceholderImage';
 import QuantitySelector from './QuantitySelector';
 
 export default function CartDrawer() {
+  const navigate = useNavigate();
   const { lines, subtotal, isOpen, closeCart, setQuantity, removeItem } =
     useCart();
 
@@ -90,11 +92,16 @@ export default function CartDrawer() {
               <span>{formatPrice(subtotal)}</span>
             </div>
             <p className="cart-drawer__shipping-note">
-              Shipping and taxes are calculated at checkout — arriving in a
-              later release.
+              Shipping is calculated at checkout — free on orders over $150.
             </p>
-            <Button block disabled>
-              Checkout — coming soon
+            <Button
+              block
+              onClick={() => {
+                closeCart();
+                navigate('/checkout');
+              }}
+            >
+              Checkout
             </Button>
           </div>
         )}
