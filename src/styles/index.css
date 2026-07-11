@@ -836,6 +836,9 @@ img {
 }
 
 .header__search {
+  /* Hidden on small screens (phase 3): the tools row now also carries
+     wishlist + account, and the shop page has its own search field. */
+  display: none;
   width: 8.5rem;
   padding: var(--space-2) var(--space-4);
   border: 1px solid var(--color-border-strong);
@@ -858,6 +861,7 @@ img {
 
 @media (min-width: 48rem) {
   .header__search {
+    display: inline-block;
     width: 13rem;
   }
 }
@@ -872,8 +876,11 @@ img {
   margin-bottom: var(--space-5);
 }
 
-/* Pill tab: resting state echoes .header__cart, active state echoes .tag */
+/* Pill tab: resting state echoes .header__cart, active state echoes .tag.
+   Also used as <a> for account sub-nav, hence the explicit display. */
 .shop-tab {
+  display: inline-flex;
+  align-items: center;
   padding: var(--space-2) var(--space-4);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-pill);
@@ -971,4 +978,242 @@ img {
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--color-ink-faint);
+}
+
+/* ============================================================
+   Phase 3 — forms & validation
+   Note: the palette has no error/danger color, so invalid state
+   reuses the accent token rather than inventing a red.
+   ============================================================ */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form__row {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (min-width: 48rem) {
+  .form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field__label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+
+.field__error {
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+}
+
+.input--invalid {
+  border-color: var(--color-accent);
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* ============================================================
+   Phase 3 — checkout (steps, layout, summary)
+   ============================================================ */
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0 0 var(--space-6);
+  padding: 0;
+}
+
+.steps__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+
+.steps__item + .steps__item::before {
+  content: '\2192';
+  color: var(--color-border-strong);
+}
+
+.steps__item--done {
+  color: var(--color-ink-soft);
+}
+
+.steps__item--active {
+  color: var(--color-accent);
+}
+
+/* Two-column layout mirroring the product detail grid */
+.checkout-grid {
+  display: grid;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (min-width: 48rem) {
+  .checkout-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--space-8);
+  }
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-line--total {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
+}
+
+.review-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ============================================================
+   Phase 3 — wishlist heart button (overlaid on card media)
+   ============================================================ */
+.card__media {
+  position: relative;
+}
+
+.wish-btn {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-ink-soft);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.wish-btn:hover {
+  color: var(--color-accent);
+  border-color: var(--color-border-strong);
+}
+
+.wish-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.wish-btn--active {
+  color: var(--color-accent);
+}
+
+/* ============================================================
+   Phase 3 — account & shared small pieces
+   ============================================================ */
+/* Text-style button/link, same look as .cart-item__remove */
+.text-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  align-self: flex-start;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.text-btn:hover {
+  color: var(--color-accent);
+}
+
+/* Display-serif title inside cards (order ids, address labels, stats) */
+.card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+}
+
+/* Small secondary text lines inside cards */
+.text-soft {
+  font-size: var(--text-sm);
+  color: var(--color-ink-soft);
+}
+
+.account-grid {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 48rem) {
+  .account-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+.account-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.order-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Narrow centered column for the auth forms */
+.auth {
+  width: min(28rem, 100%);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }

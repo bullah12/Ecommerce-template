@@ -27,6 +27,8 @@ function cartReducer(items, action) {
     }
     case 'remove':
       return items.filter((i) => i.productId !== action.productId);
+    case 'clear':
+      return [];
     default:
       return items;
   }
@@ -61,6 +63,7 @@ export function CartProvider({ children }) {
       setQuantity: (productId, quantity) =>
         dispatch({ type: 'setQuantity', productId, quantity }),
       removeItem: (productId) => dispatch({ type: 'remove', productId }),
+      clearCart: () => dispatch({ type: 'clear' }),
     };
   }, [items, isOpen]);
 

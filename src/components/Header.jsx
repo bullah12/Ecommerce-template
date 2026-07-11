@@ -1,9 +1,12 @@
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import { collections } from '../data/products';
+import HeartIcon from './HeartIcon';
 
 export default function Header() {
   const { count, openCart } = useCart();
+  const { count: wishlistCount } = useWishlist();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -63,6 +66,19 @@ export default function Header() {
             value={query}
             onChange={(event) => handleSearch(event.target.value)}
           />
+          <Link
+            to="/wishlist"
+            className="header__cart"
+            aria-label={`Wishlist, ${wishlistCount} saved`}
+          >
+            <HeartIcon filled={wishlistCount > 0} />
+            {wishlistCount > 0 && (
+              <span className="header__cart-count">{wishlistCount}</span>
+            )}
+          </Link>
+          <Link to="/account" className="header__cart">
+            Account
+          </Link>
           <button
             type="button"
             className="header__cart"
