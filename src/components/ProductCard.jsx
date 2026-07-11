@@ -14,6 +14,9 @@ export default function ProductCard({ product }) {
           <h3 className="product-card__name">{product.name}</h3>
           <p className="product-card__desc">{product.description}</p>
           <p className="product-card__price">{formatPrice(product.price)}</p>
+          {product.inStock === false && (
+            <p className="product-card__stock">Out of stock</p>
+          )}
         </div>
       </article>
     </Link>

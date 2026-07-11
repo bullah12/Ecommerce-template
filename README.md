@@ -2,7 +2,9 @@
 
 A responsive React storefront with a minimal, luxury aesthetic. Phase 1:
 design system, catalog data, homepage, product detail page, and a slide-out
-cart driven by React Context — no backend yet.
+cart driven by React Context — no backend yet. Phase 2: full 30-product
+catalog across five collections, a shop page with collection tabs, sorting,
+instant search, and price/stock filters, all wired into the header.
 
 ## Run it
 
@@ -19,13 +21,16 @@ npm run preview  # serve the production build
 src/
   styles/index.css      Design tokens (color, type, spacing, radius,
                         shadow, motion) + reusable component classes
-  data/products.js      Single source of catalog data: 3 collections,
-                        8 products, helper selectors
+  data/products.js      Single source of catalog data: 5 collections,
+                        30 products, helper selectors. Best Sellers and
+                        New Arrivals are derived from popularity/dateAdded
   context/CartContext.jsx  Cart state (add, set quantity, remove,
                            subtotal) via Context + useReducer
   components/           Button, ProductCard, PlaceholderImage,
                         QuantitySelector, Header, Footer, CartDrawer
   pages/                HomePage (hero, featured grid, collection row),
+                        ShopPage (collection tabs, sort, instant search,
+                        price/stock filters — all URL-driven),
                         ProductPage (media, details, add-to-cart)
 ```
 
@@ -44,5 +49,5 @@ real photography can drop in later without layout shifts.
 
 ## Out of scope in this phase
 
-Checkout, accounts, wishlist, search, filters, static pages, real images,
-and any backend — planned for later phases.
+Checkout, accounts, wishlist, static pages, real images, and any backend —
+planned for later phases.

@@ -43,8 +43,11 @@ export default function ProductPage() {
           <p className="pdp__desc">{product.description}</p>
           <div className="pdp__actions">
             <QuantitySelector value={quantity} onChange={setQuantity} />
-            <Button onClick={() => addItem(product.id, quantity)}>
-              Add to cart
+            <Button
+              onClick={() => addItem(product.id, quantity)}
+              disabled={!product.inStock}
+            >
+              {product.inStock ? 'Add to cart' : 'Out of stock'}
             </Button>
           </div>
           <p className="pdp__note">
